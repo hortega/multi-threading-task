@@ -4,9 +4,9 @@ import requests
 import concurrent.futures
 
 from typing import List
-from pymongo import MongoClient
 
-client = MongoClient('mongodb://localhost:27017/')
+from app.mongo import write_elapsed_time
+
 headers = {'Accept-Encoding': 'identity'}
 
 
@@ -28,13 +28,15 @@ def crawl_domains(domains: List[str]) -> [str]:
 
             titles = [r for r in results if r is not None]
 
-            end = time.time()
-            print(f'Elapsed time {end - start}')
+            elapsed_time = time.time() - start
+            print(f'Elapsed time {elapsed_time}')
+            write_elapsed_time(elapsed_time)
 
             return titles
 
     # Hack: For some reason can't catch asyncio.TimeoutException
-    except Exception:
+    except Exception as e:
+        print(e)
         return []
 
 

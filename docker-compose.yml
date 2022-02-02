@@ -6,6 +6,8 @@ services:
     build: .
     command: uvicorn app.main:app --host 0.0.0.0 --reload
     restart: always
+    depends_on:
+      - mongo
     volumes:
       - .:/code
     ports:
@@ -21,6 +23,8 @@ services:
   mongo-express:
     image: mongo-express
     restart: always
+    depends_on:
+      - mongo
     ports:
       - 8081:8081
     environment:
